@@ -1,0 +1,16 @@
+[2026-05-24T09:32:16.208+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: weather_etl_pipeline.run_weather_pipeline manual__2026-05-24T09:32:14.559742+00:00 [queued]>
+[2026-05-24T09:32:16.213+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: weather_etl_pipeline.run_weather_pipeline manual__2026-05-24T09:32:14.559742+00:00 [queued]>
+[2026-05-24T09:32:16.214+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 2
+[2026-05-24T09:32:16.223+0000] {taskinstance.py:2191} INFO - Executing <Task(PythonOperator): run_weather_pipeline> on 2026-05-24 09:32:14.559742+00:00
+[2026-05-24T09:32:16.227+0000] {standard_task_runner.py:60} INFO - Started process 207 to run task
+[2026-05-24T09:32:16.229+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'weather_etl_pipeline', 'run_weather_pipeline', 'manual__2026-05-24T09:32:14.559742+00:00', '--job-id', '76', '--raw', '--subdir', 'DAGS_FOLDER/etl_dag.py', '--cfg-path', '/tmp/tmp5l037xab']
+[2026-05-24T09:32:16.231+0000] {standard_task_runner.py:88} INFO - Job 76: Subtask run_weather_pipeline
+[2026-05-24T09:32:16.259+0000] {task_command.py:423} INFO - Running <TaskInstance: weather_etl_pipeline.run_weather_pipeline manual__2026-05-24T09:32:14.559742+00:00 [running]> on host 52ac956d81db
+[2026-05-24T09:32:16.309+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='weather_etl_pipeline' AIRFLOW_CTX_TASK_ID='run_weather_pipeline' AIRFLOW_CTX_EXECUTION_DATE='2026-05-24T09:32:14.559742+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-05-24T09:32:14.559742+00:00'
+[2026-05-24T09:32:16.310+0000] {models.py:23} INFO - Starting extraction process
+[2026-05-24T09:32:16.327+0000] {credentials.py:1075} INFO - Found credentials from IAM Role: s3-athena-ec2
+[2026-05-24T09:32:16.420+0000] {models.py:49} ERROR - API key is Invalid
+[2026-05-24T09:32:16.422+0000] {python.py:201} INFO - Done. Returned value was: None
+[2026-05-24T09:32:16.435+0000] {taskinstance.py:1138} INFO - Marking task as SUCCESS. dag_id=weather_etl_pipeline, task_id=run_weather_pipeline, execution_date=20260524T093214, start_date=20260524T093216, end_date=20260524T093216
+[2026-05-24T09:32:16.482+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2026-05-24T09:32:16.493+0000] {taskinstance.py:3280} INFO - 0 downstream tasks scheduled from follow-on schedule check

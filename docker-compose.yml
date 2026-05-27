@@ -1,0 +1,103 @@
+services:
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+
+    restart: always
+
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+
+  airflow-init:
+    image: weather-airflow:latest
+    container_name: airflow-init
+
+    depends_on:
+      - postgres
+
+    env_file:
+      - .env
+
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      PYTHONPATH: /opt/airflow/weather_analysis
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_SECRET_KEY}
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./:/opt/airflow/weather_analysis
+
+    entrypoint: /bin/bash
+
+    command:
+      - -c
+      - |
+        airflow db migrate &&
+        airflow users create \
+          --username admin \
+          --password admin \
+          --firstname admin \
+          --lastname admin \
+          --role Admin \
+          --email sanjayanms1998@gmail.com || true
+
+  airflow-webserver:
+    image: weather-airflow:latest
+    container_name: airflow-webserver
+
+    restart: always
+
+    depends_on:
+      - postgres
+      - airflow-init
+
+    env_file:
+      - .env
+
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      PYTHONPATH: /opt/airflow/weather_analysis
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_SECRET_KEY}
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./:/opt/airflow/weather_analysis
+
+    ports:
+      - "8080:8080"
+
+    command: airflow webserver
+
+  airflow-scheduler:
+    image: weather-airflow:latest
+    container_name: airflow-scheduler
+
+    restart: always
+
+    depends_on:
+      - airflow-webserver
+
+    env_file:
+      - .env
+
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      PYTHONPATH: /opt/airflow/weather_analysis
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_SECRET_KEY}
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./:/opt/airflow/weather_analysis
+
+    command: airflow scheduler
+
+volumes:
+  postgres-db-volume:
