@@ -1,9 +1,7 @@
 #!/bin/bash
 
 # ==========================================
-# Local Environment Setup Script
 # Installs:
-#   - Python Virtual Environment (venv)
 #   - AWS CLI
 #   - Docker
 # ==========================================
@@ -11,56 +9,12 @@
 set -e
 
 echo "=========================================="
-echo " Starting Local Environment Setup"
-echo "=========================================="
 
 # Detect OS
 OS="$(uname -s)"
 
 echo "Detected OS: $OS"
 
-# ==========================================
-# Function: Setup Python Virtual Environment
-# ==========================================
-setup_python_venv() {
-
-    echo "Setting up Python virtual environment..."
-
-    # Check if Python3 exists
-    if ! command -v python3 &> /dev/null
-    then
-        echo "Python3 is not installed."
-
-        if [[ "$OS" == "Linux" ]]; then
-
-            sudo yum install -y python3 python3-venv || \
-            sudo apt-get update && sudo apt-get install -y python3 python3-venv
-
-        elif [[ "$OS" == "Darwin" ]]; then
-
-            echo "Please install Python3 using Homebrew:"
-            echo "brew install python"
-
-            exit 1
-        fi
-    fi
-
-    # Create venv if it doesn't exist
-    if [ ! -d "venv" ]; then
-        python3 -m venv venv
-        echo "Virtual environment 'venv' created."
-    else
-        echo "Virtual environment already exists."
-    fi
-
-    echo "Activating virtual environment..."
-    source venv/bin/activate
-
-    echo "Upgrading pip..."
-    pip install --upgrade pip
-
-    echo "Python virtual environment setup completed."
-}
 
 # ==========================================
 # Function: Install AWS CLI
@@ -197,9 +151,6 @@ install_docker() {
 # Execute Installations
 # ==========================================
 
-# Setup Python venv FIRST
-setup_python_venv
-
 # Install remaining tools
 install_aws_cli
 install_docker
@@ -211,10 +162,6 @@ echo "=========================================="
 echo ""
 echo "IMPORTANT:"
 echo "Logout and login again for Docker group changes to take effect."
-echo ""
-
-echo "To activate the virtual environment manually:"
-echo "  source venv/bin/activate"
 echo ""
 
 echo "Verify installations:"
