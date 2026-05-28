@@ -104,26 +104,28 @@ def load(df):
     validate(df)
 
     path = f"s3://{bucket}/weather/transformed/"
+    try:
+        existing_df = wr.s3.read_parquet(
+            path=path,
+            dataset=True,
+            partition_filter=lambda x:
+                x["year"] == str(df["year"].iloc[0]) and
+                x["month"] == str(df["month"].iloc[0]) and
+                x["day"] == str(df["day"].iloc[0])
+        )
 
-    existing_df = wr.s3.read_parquet(
-        path=path,
-        dataset=True,
-        partition_filter=lambda x:
-            x["year"] == str(df["year"].iloc[0]) and
-            x["month"] == str(df["month"].iloc[0]) and
-            x["day"] == str(df["day"].iloc[0])
-    )
+        combined_df = pd.concat(
+            [existing_df, df],
+            ignore_index=True
+        )
 
-    combined_df = pd.concat(
-        [existing_df, df],
-        ignore_index=True
-    )
-
-    combined_df = (
-        combined_df
-        .sort_values("cur_date")
-        .drop_duplicates(subset=["id"], keep="last")
-    )
+        combined_df = (
+            combined_df
+            .sort_values("cur_date")
+            .drop_duplicates(subset=["id"], keep="last")
+        )
+    except:
+        combined_df=df
 
     wr.s3.to_parquet(
         df=combined_df,
