@@ -126,6 +126,12 @@ def load(df):
         )
     except:
         combined_df=df
+        
+    glue = boto3.client("glue", region_name=region)
+    try:
+        glue.create_database(DatabaseInput={"Name": "weather"})
+    except glue.exceptions.AlreadyExistsException:
+        pass
 
     wr.s3.to_parquet(
         df=combined_df,
