@@ -6,7 +6,7 @@ echo "Docker Login..."
 docker login
 
 echo "Stopping containers..."
-docker compose down
+docker-compose down
 
 echo "Removing stopped containers..."
 docker container prune -f
@@ -25,6 +25,6 @@ echo "Initializing Airflow..."
 DOCKER_BUILDKIT=0 docker build -t weather-airflow:latest .
 
 echo "Starting Airflow services..."
-docker compose up 
+docker-compose up 
 
 echo "Done!"
