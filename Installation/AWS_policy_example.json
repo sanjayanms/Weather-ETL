@@ -11,8 +11,8 @@
                 "s3:DeleteObject"
             ],
             "Resource": [
-                "arn:aws:s3:::<data storing bucket>",
-                "arn:aws:s3:::<data storing bucket>/*"
+                "arn:aws:s3:::<Name of the bucket to store weather data>",
+                "arn:aws:s3:::<Name of the bucket to store weather data>/*"
             ]
         },
         {
@@ -21,11 +21,12 @@
             "Action": [
                 "s3:PutObject",
                 "s3:GetObject",
-                "s3:ListBucket"
+                "s3:ListBucket",
+                "s3:DeleteObject"
             ],
             "Resource": [
-                "arn:aws:s3:::<athena query bucket>",
-                "arn:aws:s3:::<athena query bucket>/*"
+                "arn:aws:s3:::<Name of the bucket to store query data>",
+                "arn:aws:s3:::<Name of the bucket to store query data>/*"
             ]
         },
         {
@@ -37,7 +38,8 @@
                 "glue:UpdateTable",
                 "glue:GetPartitions",
                 "glue:CreatePartition",
-                "glue:BatchCreatePartition"
+                "glue:BatchCreatePartition",
+                "glue:CreateDatabase"
             ],
             "Resource": "*"
         },
@@ -50,7 +52,7 @@
             ],
             "Resource": "*"
         },
-            {
+        {
             "Effect": "Allow",
             "Action": [
                 "logs:CreateLogGroup",
@@ -58,7 +60,19 @@
                 "logs:PutLogEvents"
             ],
             "Resource": "*"
-            }
-
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::Name of the bucket to store weather data",
+                "arn:aws:s3:::Name of the bucket to store weather data/*"
+            ]
+        }
     ]
 }
